@@ -4,26 +4,33 @@ import sys
 import queue
 import random
 
-f = open('map.mz',)
+# Choose the desired map
+f = open('custom.mz',)
 maze = json.load(f)
 f.close()
 
-FOUND = False
+# Some default paramenters
+# Change RGB values for desired colors
+
+SPEED = 100 # Determines how fast the algorithm will run, recommeded values: 10-100
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0,0,255)
 GREEN = (0, 255, 0)
-WINDOW_HEIGHT = 400
-WINDOW_WIDTH = 400
-BLOCK_SIZE = 20
-STEP = 0
+FOUND = False # DO NOT CHANGE
+WINDOW_HEIGHT = 400 # DO NOT CHANGE
+WINDOW_WIDTH = 400 # DO NOT CHANGE
+BLOCK_SIZE = 20 # DO NOT CHANGE
+STEP = 0 # DO NOT CHANGE
 
-
+# Creates random obstacles, use the desired maze and the ammount of obstacles as the parameters
 def createObstacles(maze, amount):
     for i in range(amount):
         maze[random.randint(0,19)][random.randint(0,19)] = "#"
 
+# Finds the coordinates of S (starting block)
+# NOTE: ALL COORDINATES ARE WRITTEN IN (Y,X) FORM!!!
 def findS(maze):
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
         for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
@@ -31,6 +38,8 @@ def findS(maze):
                 sCoords = [int(y/20), int(x/20)]
                 return sCoords
 
+# Finds the coordinates of E (ending block)
+# NOTE: ALL COORDINATES ARE WRITTEN IN (Y,X) FORM!!!
 def findE(maze):
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
         for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
@@ -38,11 +47,12 @@ def findE(maze):
                 sCoords = [int(y/20), int(x/20)]
                 return sCoords
 
+# Validates if the next step is valid
 def validateBlock(maze, put):
     if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] ==  " ":
             return True
 
-
+# Grassfire algorithm implementation
 def grassFIRE(maze):
     global FOUND, STEP
     if not FOUND:
@@ -62,32 +72,7 @@ def grassFIRE(maze):
                     FOUND = True
         STEP += 1
 
-
-def main():
-    global SCREEN, CLOCK, FIRE
-    pygame.init()
-    pygame.display.set_caption('Pathfinder')
-    FIRE = queue.Queue()
-    FIRE.put(findE(maze))
-    SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    CLOCK = pygame.time.Clock()
-    SCREEN.fill(BLACK)
-
-    while True:
-        grassFIRE(maze)
-        drawGrid()
-        print(maze)
-        if not FOUND:
-            CLOCK.tick(50)
-            pygame.display.update()
-        else:
-            while not FIRE.empty:
-                print(FIRE.get())
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
+# Rendering function
 def drawGrid():
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
         for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
@@ -103,6 +88,32 @@ def drawGrid():
             elif maze[int(y/20)][int(x/20)] == "E":
                 pygame.draw.rect(SCREEN, RED, rect)
 
- 
-    
+# Main loop
+def main():
+    global SCREEN, CLOCK, FIRE
+    pygame.init()
+    pygame.display.set_caption('Pathfinder')
+    FIRE = queue.Queue()
+    FIRE.put(findE(maze))
+    SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    CLOCK = pygame.time.Clock()
+    SCREEN.fill(BLACK)
+
+    while True:
+        grassFIRE(maze)
+        drawGrid()
+        print(maze)
+        if not FOUND:
+            CLOCK.tick(SPEED)
+            pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+# Change second value to desired ammount of obstacles
+# NOTE: HIGH AMMOUNT OF OBSTACLES CAN POTENTIALLY CRASH THE PROGRAM
+# Recommended ammount: 100-150
+# If program does not start, run again to generate new obstacles     
+createObstacles(maze, 100)
 main()

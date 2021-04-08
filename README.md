@@ -6,9 +6,9 @@ A collection of pathfinding algorithms vizualized with pyGame
 
 ### Grassfire
 
-TO-DO:
+### TO-DO:
 
-### Dijkstra's
+Dijkstra's
 
 A\*
 

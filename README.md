@@ -2,6 +2,16 @@
 
 A collection of pathfinding algorithms vizualized with pyGame
 
+## Currently implemented:
+
+### Grassfire
+
+TO-DO:
+
+### Dijkstra's
+
+A\*
+
 # Usage
 
 1.`pip install pygame`

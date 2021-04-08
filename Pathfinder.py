@@ -1,8 +1,4 @@
-import pygame
-import json
-import sys
-import queue
-import random
+import pygame, json, sys, queue, random
 
 # Choose the desired map
 f = open('custom.mz',)
@@ -56,7 +52,6 @@ def validateBlock(maze, put):
 def grassFIRE(maze):
     global FOUND, STEP
     if not FOUND:
-        print("SEARCHING...")
         temp = FIRE.get()
         for move in [1,-1]:
             for i in range(2):
@@ -64,11 +59,8 @@ def grassFIRE(maze):
                 put[i] = put[i] + move
                 if validateBlock(maze,put):
                     FIRE.put(put)
-                    maze[put[0]][put[1]] = str(STEP)
-                    
+                    maze[put[0]][put[1]] = str(STEP)    
                 elif put == findS(maze):
-
-                    print("FOUND")
                     FOUND = True
         STEP += 1
 
@@ -111,6 +103,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
 # Change second value to desired ammount of obstacles
 # NOTE: HIGH AMMOUNT OF OBSTACLES CAN POTENTIALLY CRASH THE PROGRAM
 # Recommended ammount: 100-150

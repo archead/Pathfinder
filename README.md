@@ -6,7 +6,7 @@ A collection of pathfinding algorithms vizualized with pyGame.
 
 None :^)
 
-### Work In Progress
+### Work In Progress:
 
 Grassfire
 

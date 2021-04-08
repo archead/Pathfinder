@@ -2,7 +2,7 @@
 
 A collection of pathfinding algorithms vizualized with pyGame.
 
-## Currently implemented:
+# Currently implemented:
 
 Grassfire
 

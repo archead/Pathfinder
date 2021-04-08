@@ -1,6 +1,6 @@
 # Pathfinder
 
-A collection of pathfinding algorithms vizualized with pyGame.
+A collection of pathfinding algorithms visualized with pyGame.
 
 ## Currently implemented:
 

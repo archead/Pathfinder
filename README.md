@@ -1,10 +1,10 @@
 # Pathfinder
 
-A collection of pathfinding algorithms vizualized with pyGame
+A collection of pathfinding algorithms vizualized with pyGame.
 
 ## Currently implemented:
 
-### Grassfire
+Grassfire
 
 ### TO-DO:
 
@@ -22,4 +22,4 @@ A\*
 
 Open `custom.mz` and create your own maze.
 
-Use `map.mz` for reference
+Use `map.mz` for reference.

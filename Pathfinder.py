@@ -1,7 +1,7 @@
 import pygame, json, sys, queue, random
 
 # Choose the desired map
-f = open('custom.mz',)
+f = open('star.mz',)
 maze = json.load(f)
 f.close()
 
@@ -108,5 +108,5 @@ def main():
 # NOTE: HIGH AMMOUNT OF OBSTACLES CAN POTENTIALLY CRASH THE PROGRAM
 # Recommended ammount: 100-150
 # If program does not start, run again to generate new obstacles     
-createObstacles(maze, 100)
+createObstacles(maze, 0)
 main()

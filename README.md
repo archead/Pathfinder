@@ -2,6 +2,8 @@
 
 A collection of pathfinding algorithms visualized with pyGame.
 
+![alt text](https://github.com/archead/Pathfinder/blob/main/sample%20gifs/sample.gif)
+
 ## Currently implemented:
 
 None :^)

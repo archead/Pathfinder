@@ -1,13 +1,19 @@
-import pygame, json, sys, queue, random
+import pygame, json, sys, queue, random, argparse
 
-# Choose the desired map
-f = open('star.mz')
+parser = argparse.ArgumentParser(description="Find optimal path for a given map file.")
+parser.add_argument('-i', '--input', default='star.mz', type=str, help='Input map file.(default: star.mz)')
+parser.add_argument('-s', '--speed', type=int, help='Speed for alrgorithm execution, recommended values: 50-150')
+parser.add_argument('-v','--verbose', action='store_true', help='Display verbose output.')
+parser.add_argument('-r','--random', type=int, default=0, help='Amount of random obstacle blocks generated, recommended values: 50-150(default: 0)')
+args = parser.parse_args()
+
+f = open(args.input) or 'star.mz'
 maze = json.load(f)
 f.close()
 
 # Some default paramenters
 # Change RGB values for desired colors
-SPEED = 150 # Determines how fast the algorithm will run, recommeded values: 10-100
+SPEED = args.speed or 100 # Determines how fast the algorithm will run, recommeded values: 10-100
 BLACK = (31, 31, 31)
 BACKGROUND = (195, 181, 255)
 WHITE = (255, 255, 255)
@@ -23,7 +29,10 @@ STEP = 1 # DO NOT CHANGE
 # Creates random obstacles, use the desired maze and the ammount of obstacles as the parameters
 def createObstacles(maze, amount):
     for i in range(amount):
-        maze[random.randint(0,19)][random.randint(0,19)] = "#"
+        randX = random.randint(0,19)
+        randY = random.randint(0,19)
+        if maze[randY][randX] != "E" or maze[randY][randX] != "S":
+            maze[randY][randX] = "#"
 
 # Finds the coordinates of S (starting block)
 # NOTE: ALL COORDINATES ARE WRITTEN IN (Y,X) FORM!!!
@@ -51,10 +60,11 @@ def validateBlock(maze, put):
 def validateStep(maze, put, prev):
     global END
     if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] !=  "#" and maze[put[0]][put[1]] !=  " " and maze[put[0]][put[1]] !=  "S":
-        if int(maze[put[0]][put[1]]) < int(maze[prev[0]][prev[1]]):
+        if int(maze[put[0]][put[1]]) < int(maze[prev[0]][prev[1]]) and maze[put[0]][put[1]] !=  "0":
             return True
-    elif maze[prev[0]][prev[1]] ==  "0":
-        END = True      
+        elif maze[put[0]][put[1]] ==  "0":
+            print("PATH FOUND!")
+            END = True
 
 # grassFire algorithm implementation
 def grassFire(maze):
@@ -120,6 +130,7 @@ def main():
     END = False
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     CLOCK = pygame.time.Clock()
+    print("Beginning Search...")
 
     while True:
         grassFire(maze)
@@ -127,9 +138,13 @@ def main():
         if not FOUND:
             CLOCK.tick(SPEED)
             pygame.display.update()
+            if args.verbose:
+                print(maze)
         elif not END:
             traceBack(maze, START)
             CLOCK.tick(SPEED)
+            if args.verbose:
+                print(PATH)
             pygame.display.update()
 
         for event in pygame.event.get():
@@ -141,5 +156,5 @@ def main():
 # NOTE: HIGH AMMOUNT OF OBSTACLES CAN POTENTIALLY CRASH THE PROGRAM
 # Recommended ammount: 100-150
 # If program does not start, run again to generate new obstacles     
-createObstacles(maze, 0)
+createObstacles(maze, args.random)
 main()

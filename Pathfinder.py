@@ -1,14 +1,14 @@
 import pygame, json, sys, queue, random
 
 # Choose the desired map
-f = open('star.mz',)
+f = open('smiley.mz',)
 maze = json.load(f)
 f.close()
 
 # Some default paramenters
 # Change RGB values for desired colors
 
-SPEED = 100 # Determines how fast the algorithm will run, recommeded values: 10-100
+SPEED = 150 # Determines how fast the algorithm will run, recommeded values: 10-100
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -54,7 +54,6 @@ def validateStep(maze, put, prev):
         if int(maze[put[0]][put[1]]) < int(maze[prev[0]][prev[1]]):
             return True
     elif maze[prev[0]][prev[1]] ==  "0":
-        print("END")
         END = True      
 
 # grassFire algorithm implementation
@@ -80,7 +79,7 @@ def grassFire(maze):
 # appends the coordinates into the PATH array
 # stops after reaching the "E" block
 def traceBack(maze, block):
-    global PATH, START, END
+    global PATH, START
     for move in [1,-1]:
             for i in range(2):
                 put = [block[0],block[1]]
@@ -89,15 +88,13 @@ def traceBack(maze, block):
                     START = put
                     block = put
                     PATH.append(put)
-                    print(PATH)
-                    
-                    
+                                       
 # Rendering function
 def drawGrid():
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
         for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
             rect = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
-            if maze[int(y/20)][int(x/20)] != " " and [int(y/20),int(x/20)] != PATH[-1]:
+            if maze[int(y/20)][int(x/20)] != " ":
                 pygame.draw.rect(SCREEN, BLUE, rect)
             if maze[int(y/20)][int(x/20)] == " ":
                 pygame.draw.rect(SCREEN, WHITE, rect)
@@ -123,7 +120,6 @@ def main():
     END = False
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     CLOCK = pygame.time.Clock()
-    print(findE(maze))
 
     while True:
         grassFire(maze)
@@ -131,7 +127,6 @@ def main():
         if not FOUND:
             CLOCK.tick(SPEED)
             pygame.display.update()
-            print(maze)
         elif not END:
             traceBack(maze, START)
             CLOCK.tick(SPEED)

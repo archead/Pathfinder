@@ -1,18 +1,19 @@
 import pygame, json, sys, queue, random
 
 # Choose the desired map
-f = open('star.mz',)
+f = open('star.mz')
 maze = json.load(f)
 f.close()
 
 # Some default paramenters
 # Change RGB values for desired colors
 SPEED = 150 # Determines how fast the algorithm will run, recommeded values: 10-100
-BLACK = (0, 0, 0)
+BLACK = (31, 31, 31)
+BACKGROUND = (195, 181, 255)
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-BLUE = (0,0,255)
-GREEN = (0, 255, 0)
+RED = (252, 159, 159)
+BLUE = (102,159,250)
+GREEN = (167, 255, 120)
 FOUND = False # DO NOT CHANGE
 WINDOW_HEIGHT = 400 # DO NOT CHANGE
 WINDOW_WIDTH = 400 # DO NOT CHANGE
@@ -39,8 +40,8 @@ def findE(maze):
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
         for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
             if maze[int(y/20)][int(x/20)] == "E":
-                sCoords = [int(y/20), int(x/20)]
-                return sCoords
+                eCoords = [int(y/20), int(x/20)]
+                return eCoords
 
 # Validates if the next step is valid
 def validateBlock(maze, put):
@@ -63,7 +64,7 @@ def grassFire(maze):
         for move in [1,-1]:
             for i in range(2):
                 put = [temp[0],temp[1]]
-                put[i] = put[i] + move
+                put[i] += move
                 if validateBlock(maze,put):
                     FIRE.put(put)
                     maze[put[0]][put[1]] = str(STEP)
@@ -96,7 +97,7 @@ def drawGrid():
             if maze[int(y/20)][int(x/20)] != " ":
                 pygame.draw.rect(SCREEN, BLUE, rect)
             if maze[int(y/20)][int(x/20)] == " ":
-                pygame.draw.rect(SCREEN, WHITE, rect)
+                pygame.draw.rect(SCREEN, BACKGROUND, rect)
             elif maze[int(y/20)][int(x/20)] == "#":
                 pygame.draw.rect(SCREEN, BLACK, rect)
             elif maze[int(y/20)][int(x/20)] == "S" or maze[int(y/20)][int(x/20)] == "999":

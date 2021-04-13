@@ -8,7 +8,7 @@ f.close()
 # Some default paramenters
 # Change RGB values for desired colors
 
-SPEED = 100 # Determines how fast the algorithm will run, recommeded values: 10-100
+SPEED = 150 # Determines how fast the algorithm will run, recommeded values: 10-100
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -18,7 +18,7 @@ FOUND = False # DO NOT CHANGE
 WINDOW_HEIGHT = 400 # DO NOT CHANGE
 WINDOW_WIDTH = 400 # DO NOT CHANGE
 BLOCK_SIZE = 20 # DO NOT CHANGE
-STEP = 0 # DO NOT CHANGE
+STEP = 1 # DO NOT CHANGE
 
 # Creates random obstacles, use the desired maze and the ammount of obstacles as the parameters
 def createObstacles(maze, amount):
@@ -46,6 +46,11 @@ def findE(maze):
 # Validates if the next step is valid
 def validateBlock(maze, put):
     if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] ==  " ":
+        return True
+
+def validateStep(maze, put, prev):
+    if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] !=  "#" and maze[put[0]][put[1]] !=  " " and maze[put[0]][put[1]] !=  "S":
+        if int(maze[put[0]][put[1]]) < int(maze[prev[0]][prev[1]]):
             return True
 
 # Grassfire algorithm implementation
@@ -59,11 +64,41 @@ def grassFIRE(maze):
                 put[i] = put[i] + move
                 if validateBlock(maze,put):
                     FIRE.put(put)
-                    maze[put[0]][put[1]] = str(STEP)    
+                    maze[put[0]][put[1]] = str(STEP)
+                    #print(maze)
                 elif put == findS(maze):
+                    maze[put[0]][put[1]] = str(999)
                     FOUND = True
+                    #print(maze)
         STEP += 1
 
+# DEPRECATED left here for reference        
+def cont(maze):
+    global PATH
+    for move in [1,-1]:
+            for i in range(2):
+                put = [PATH[-1][0],PATH[-1][1]]
+                put[i] = put[i] + move
+                if validateStep(maze, put, PATH[-1]):
+                    #maze[PATH[-1][0]][PATH[-1][1]] = "P"
+                    PATH.append(put)
+                    print(PATH)
+
+# Calculates the step needed to get to the "E" block
+# appends the coordinates into the PATH array
+# stops after reaching the "E" block
+def step(maze, block):
+    global PATH
+    global START
+    for move in [1,-1]:
+            for i in range(2):
+                put = [block[0],block[1]]
+                put[i] += move
+                if validateStep(maze, put, block):
+                    PATH.append(put)
+                    print(PATH)
+                    step(maze, put)
+                    
 # Rendering function
 def drawGrid():
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
@@ -82,11 +117,16 @@ def drawGrid():
 
 # Main loop
 def main():
-    global SCREEN, CLOCK, FIRE
+    global SCREEN, CLOCK, FIRE, PATH
     pygame.init()
     pygame.display.set_caption('Pathfinder')
     FIRE = queue.Queue()
     FIRE.put(findE(maze))
+    FIRE2 = queue.Queue()
+    FIRE2.put(findS(maze))
+    PATH = []
+    START = findS(maze)
+    PATH.append(START)
     SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     CLOCK = pygame.time.Clock()
     SCREEN.fill(BLACK)
@@ -94,10 +134,12 @@ def main():
     while True:
         grassFIRE(maze)
         drawGrid()
-        print(maze)
+        #print(maze)
         if not FOUND:
             CLOCK.tick(SPEED)
             pygame.display.update()
+        else:
+            step(maze, START)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

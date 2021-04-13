@@ -1,13 +1,12 @@
 import pygame, json, sys, queue, random
 
 # Choose the desired map
-f = open('smiley.mz',)
+f = open('star.mz',)
 maze = json.load(f)
 f.close()
 
 # Some default paramenters
 # Change RGB values for desired colors
-
 SPEED = 150 # Determines how fast the algorithm will run, recommeded values: 10-100
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)

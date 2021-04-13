@@ -24,7 +24,7 @@ A\*
 
 1.use `py Pathfinder.py -h` for further instructions.
 
-![Usage]https://github.com/archead/Pathfinder/blob/main/sample%20images/usage.jpg
+![Usage](https://github.com/archead/Pathfinder/blob/main/sample%20images/usage.jpg)
 
 ## Maze files (.mz)
 

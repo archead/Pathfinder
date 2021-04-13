@@ -6,11 +6,11 @@ A collection of pathfinding algorithms visualized with pyGame.
 
 ## Currently implemented:
 
-None :^)
+Grassfire
 
 ### Work In Progress:
 
-Grassfire
+None :^)
 
 ### TO-DO:
 

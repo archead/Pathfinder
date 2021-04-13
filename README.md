@@ -22,7 +22,7 @@ A\*
 
 1.`pip install pygame`
 
-2.use `py Pathfinder.py -h` for further instructions
+1.use `py Pathfinder.py -h` for further instructions.
 
 ## Maze files (.mz)
 

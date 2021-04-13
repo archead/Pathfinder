@@ -29,3 +29,5 @@ A\*
 Open `custom.mz` and create your own maze.
 
 Use `map.mz` for reference.
+
+Feel free to fork this, create a new maze and do a pull request :)

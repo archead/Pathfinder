@@ -1,10 +1,10 @@
 import pygame, json, sys, queue, random, argparse
 
 parser = argparse.ArgumentParser(description="Find optimal path for a given map file.")
-parser.add_argument('-i', '--input', default='star.mz', type=str, help='Input map file.(default: star.mz)')
+parser.add_argument('-i', '--input', default='star.mz', type=str, help='Input map file. (default: star.mz)')
 parser.add_argument('-s', '--speed', type=int, help='Speed for alrgorithm execution, recommended values: 50-150')
 parser.add_argument('-v','--verbose', action='store_true', help='Display verbose output.')
-parser.add_argument('-r','--random', type=int, default=0, help='Amount of random obstacle blocks generated, recommended values: 50-150(default: 0)')
+parser.add_argument('-r','--random', type=int, default=0, help='Amount of random obstacle blocks generated, recommended values: 50-150 (default: 0)')
 args = parser.parse_args()
 
 f = open(args.input) or 'star.mz'

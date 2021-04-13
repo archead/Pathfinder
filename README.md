@@ -2,7 +2,7 @@
 
 A collection of pathfinding algorithms visualized with pyGame.
 
-![alt text](https://github.com/archead/Pathfinder/blob/main/sample%20gifs/star.gif)
+![Demo](https://github.com/archead/Pathfinder/blob/main/sample%20gifs/star.gif)
 
 ### Currently implemented:
 
@@ -23,6 +23,8 @@ A\*
 1.`pip install pygame`
 
 1.use `py Pathfinder.py -h` for further instructions.
+
+![Usage]https://github.com/archead/Pathfinder/blob/main/sample%20images/usage.jpg
 
 ## Maze files (.mz)
 

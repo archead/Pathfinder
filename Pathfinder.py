@@ -112,7 +112,6 @@ def grassFire(maze):
 def aStar(maze):
     global FOUND, STEP, START
     comp = []
-    nextBlock = 999
     if not FOUND:
         temp = FIRE.get()
         for move in [1,-1]:

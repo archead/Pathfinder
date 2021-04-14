@@ -1,13 +1,15 @@
-import pygame, json, sys, queue, random, argparse
+import pygame, json, sys, queue, random, argparse, math
 
 parser = argparse.ArgumentParser(description="Find optimal path for a given map file.")
-parser.add_argument('-i', '--input', default='star.mz', type=str, help='Input map file. (default: star.mz)')
+parser.add_argument('-i', '--input', default='custom.mz', type=str, help='Input map file. (default: star.mz)')
 parser.add_argument('-s', '--speed', type=int, help='Speed for alrgorithm execution, recommended values: 50-150')
 parser.add_argument('-v','--verbose', action='store_true', help='Display verbose output.')
 parser.add_argument('-r','--random', type=int, default=0, help='Amount of random obstacle blocks generated, recommended values: 50-150 (default: 0)')
+parser.add_argument('-a','--algorithm', type=str, default="astar", help='Selects Algorithm')
+
 args = parser.parse_args()
 
-f = open(args.input) or 'star.mz'
+f = open(args.input)
 maze = json.load(f)
 f.close()
 
@@ -52,10 +54,20 @@ def findE(maze):
                 eCoords = [int(y/20), int(x/20)]
                 return eCoords
 
+def h(block):
+    global maze
+    S = findS(maze)
+    E = [block[0],block[1]]
+    return math.sqrt((E[0]-S[0])**2+(E[1]-S[1])**2)
+
 # Validates if the next step is valid
 def validateBlock(maze, put):
     if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] ==  " ":
         return True
+
+def validateH(maze, put):
+    if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] !=  "#" and maze[put[0]][put[1]] !=  "S" and maze[put[0]][put[1]] !=  "E" and maze[put[0]][put[1]] ==  " ":
+            return True
 
 def validateStep(maze, put, prev):
     global END
@@ -66,6 +78,14 @@ def validateStep(maze, put, prev):
             print("PATH FOUND!")
             END = True
 
+def smallestStep(comp):
+    nextBlock = 999
+    smallest = []
+    for coord in comp:
+        if int(h(coord)) + STEP <= nextBlock:
+            nextBlock = int(h(coord)) + STEP
+            smallest = coord
+    return smallest
 # grassFire algorithm implementation
 def grassFire(maze):
     global FOUND, STEP, START
@@ -83,6 +103,29 @@ def grassFire(maze):
                     E = findE(maze)
                     maze[E[0]][E[1]] = str(0)
                     FOUND = True
+        STEP += 1
+
+def aStar(maze):
+    global FOUND, STEP, START
+    comp = []
+    nextBlock = 999
+    if not FOUND:
+        temp = FIRE.get()
+        for move in [1,-1]:
+            for i in range(2):
+                put = [temp[0],temp[1]]
+                put[i] += move
+                if validateH(maze, put):
+                    maze[put[0]][put[1]] = str(STEP)
+                    comp.append(put)
+                elif put == findS(maze):
+                    maze[put[0]][put[1]] = str(999)
+                    E = findE(maze)
+                    maze[E[0]][E[1]] = str(0)
+                    FOUND = True
+    if not FOUND:
+        nextStep = smallestStep(comp)
+        FIRE.put(nextStep)
         STEP += 1
 
 # Calculates the step needed to get to the "E" block
@@ -133,19 +176,22 @@ def main():
     print("Beginning Search...")
 
     while True:
-        grassFire(maze)
+        if args.algorithm == "astar" and not FOUND:
+            aStar(maze)
+        elif args.algorithm == "grassfire" and not FOUND:
+            grassFire(maze)
         drawGrid()
+        pygame.display.update()
+
         if not FOUND:
             CLOCK.tick(SPEED)
-            pygame.display.update()
             if args.verbose:
                 print(maze)
         elif not END:
             traceBack(maze, START)
             CLOCK.tick(SPEED)
-            if args.verbose:
-                print(PATH)
-            pygame.display.update()
+            if args.verbose and END:
+                print("Steps taken:", STEP)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

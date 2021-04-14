@@ -1,6 +1,6 @@
 # Pathfinder
 
-A collection of pathfinding algorithms visualized with pyGame.
+This program visualizes a collection of algrorithms using python and pyGame and a front end to make it easier to understand how different search and path finding algortihms work on a grid based graph.
 
 ![Demo](https://github.com/archead/Pathfinder/blob/main/sample%20gifs/star.gif)
 

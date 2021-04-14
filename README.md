@@ -10,12 +10,6 @@ Grassfire
 
 ### Work In Progress:
 
-None :^)
-
-### TO-DO:
-
-Dijkstra's
-
 A\*
 
 ## Usage

@@ -5,7 +5,7 @@ parser.add_argument('-i', '--input', default='custom.mz', type=str, help='Input 
 parser.add_argument('-s', '--speed', type=int, help='Speed for alrgorithm execution, recommended values: 50-150')
 parser.add_argument('-v','--verbose', action='store_true', help='Display verbose output.')
 parser.add_argument('-r','--random', type=int, default=0, help='Amount of random obstacle blocks generated, recommended values: 50-150 (default: 0)')
-parser.add_argument('-a','--algorithm', type=str, default="astar", help='Selects Algorithm')
+parser.add_argument('-a','--algorithm', type=str, default="astar", help='Selects algorithm, currently available: grassfire, astar (BETA)')
 
 args = parser.parse_args()
 
@@ -65,10 +65,12 @@ def validateBlock(maze, put):
     if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] ==  " ":
         return True
 
+# Identical to validateBlock() but used for A*
 def validateH(maze, put):
     if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] !=  "#" and maze[put[0]][put[1]] !=  "S" and maze[put[0]][put[1]] !=  "E" and maze[put[0]][put[1]] ==  " ":
             return True
 
+# Identical to validateBlock() but used for traceBack()
 def validateStep(maze, put, prev):
     global END
     if put[0] >= 0 and put[1] >= 0 and put[0] < 20 and put[1] < 20 and maze[put[0]][put[1]] !=  "#" and maze[put[0]][put[1]] !=  " " and maze[put[0]][put[1]] !=  "S":
@@ -78,6 +80,7 @@ def validateStep(maze, put, prev):
             print("PATH FOUND!")
             END = True
 
+# Returns the shortest possible step that should be taken out of the 4 or less possibilities
 def smallestStep(comp):
     nextBlock = 999
     smallest = []
@@ -86,7 +89,7 @@ def smallestStep(comp):
             nextBlock = int(h(coord)) + STEP
             smallest = coord
     return smallest
-# grassFire algorithm implementation
+# Grassfire algorithm implementation
 def grassFire(maze):
     global FOUND, STEP, START
     if not FOUND:
@@ -105,6 +108,7 @@ def grassFire(maze):
                     FOUND = True
         STEP += 1
 
+# A* algorithm implementation
 def aStar(maze):
     global FOUND, STEP, START
     comp = []

@@ -16,7 +16,7 @@ A\*
 
 1.`pip install pygame`
 
-2.use `py Pathfinder.py -h` for further instructions.
+2. Use `py Pathfinder.py -h` for further instructions.
 
 ![Usage](https://github.com/archead/Pathfinder/blob/main/sample%20images/usage.jpg)
 

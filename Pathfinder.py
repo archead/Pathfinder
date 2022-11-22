@@ -89,6 +89,7 @@ def smallestStep(comp):
             nextBlock = int(h(coord)) + STEP
             smallest = coord
     return smallest
+
 # Grassfire algorithm implementation
 def grassFire(maze):
     global FOUND, STEP, START
